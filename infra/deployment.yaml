@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-service
+  labels:
+    app: simple-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8000
+      name: simple-service
+  selector:
+    app: simple-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-service
+  labels:
+    app: simple-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-service
+  template:
+    metadata:
+      labels:
+        app: simple-service
+    spec:
+      containers:
+        - name: simple-service
+          image: amilstead/simple-service
+          ports:
+            - containerPort: 8000
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: simple-service-config
+                  key: NODE_ENV
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: host
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: port
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: password
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: username
+            - name: DB_NAME
+              value: simple-service

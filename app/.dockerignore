@@ -1,0 +1,10 @@
+# easy wins.
+Dockerfile
+*.md
+**/*.md
+*.rst
+**/*.rst
+
+# js build stuff
+node_modules
+build

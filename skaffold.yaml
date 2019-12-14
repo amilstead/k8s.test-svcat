@@ -1,0 +1,30 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+    - image: amilstead/simple-service
+      context: ./app
+      docker:
+        target: app
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/deployment.yaml
+profiles:
+  - name: local
+    activation:
+      - command: dev
+        kubeContext: minikube
+    patches:
+      - op: add
+        path: /deploy/kubectl/manifests/0
+        value: ./config/local.yaml
+  - name: bootstrap-db
+    activation:
+      - command: run
+        env: BOOTSTRAP_DB=true
+    build:
+    deploy:
+      kubectl:
+        manifests:
+          - ./infra/bootstrap-db.yaml

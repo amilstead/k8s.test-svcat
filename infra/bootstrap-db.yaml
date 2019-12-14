@@ -1,0 +1,38 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: simple-service-db-bootstrapper
+  labels:
+    app: simple-service
+    role: db-bootstrapper
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: simple-service-db-bootstrapper
+          image: postgres:9.6-alpine
+          command: ['psql', '-c', 'CREATE DATABASE "simple-service"']
+          # https://www.postgresql.org/docs/current/libpq-envars.html
+          env:
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: host
+            - name: PGPORT
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: port
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: password
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: simple-service-db-binding
+                  key: username
