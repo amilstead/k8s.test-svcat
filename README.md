@@ -1,3 +1,15 @@
+# setup
+
+Make sure kubernetes & kubectl are installed.
+
+Run `make setup`
+
+Run `make bootstrap-db`
+
+Then `skaffold dev` as often as you like.
+
+You may need to wait a while in between setup steps, as the things that happen in k8s after running them may take some time.
+
 # Make usage
 
 Usage:
