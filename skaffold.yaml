@@ -15,6 +15,10 @@ profiles:
     activation:
       - command: dev
         kubeContext: minikube
+      - command: dev
+        kubeContext: docker-desktop
+      - command: dev
+        kubeContext: docker-for-desktop
     patches:
       - op: add
         path: /deploy/kubectl/manifests/0
